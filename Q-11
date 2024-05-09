@@ -1,0 +1,27 @@
+#include <fstream>
+#include <iostream>
+#include <cctype>
+
+int main() {
+    std::ifstream sourceFile("source.txt");
+    std::ofstream destinationFile("destination.txt");
+
+    if (!sourceFile.is_open() || !destinationFile.is_open()) {
+        std::cerr << "Error opening files!" << std::endl;
+        return 1;
+    }
+
+    char ch;
+    while (sourceFile.get(ch)) {
+        if (!std::isspace(static_cast<unsigned char>(ch))) {
+            destinationFile.put(ch);
+        }
+    }
+
+    sourceFile.close();
+    destinationFile.close();
+
+    std::cout << "The contents have been copied successfully without whitespaces." << std::endl;
+
+    return 0;
+}
