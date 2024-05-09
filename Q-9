@@ -1,0 +1,69 @@
+#include <iostream>
+#include <string>
+
+// Base class
+class Person {
+protected:
+    std::string name;
+
+public:
+    Person(const std::string& name) : name(name) {}
+
+    virtual void display() const {
+        std::cout << "Name: " << name << std::endl;
+    }
+
+    virtual ~Person() {}
+};
+
+// Derived class for Student
+class Student : public Person {
+private:
+    std::string course;
+    int marks;
+    int year;
+
+public:
+    Student(const std::string& name, const std::string& course, int marks, int year)
+        : Person(name), course(course), marks(marks), year(year) {}
+
+    void display() const override {
+        Person::display();
+        std::cout << "Course: " << course << std::endl;
+        std::cout << "Marks: " << marks << std::endl;
+        std::cout << "Year: " << year << std::endl;
+    }
+};
+
+// Derived class for Employee
+class Employee : public Person {
+private:
+    std::string department;
+    double salary;
+
+public:
+    Employee(const std::string& name, const std::string& department, double salary)
+        : Person(name), department(department), salary(salary) {}
+
+    void display() const override {
+        Person::display();
+        std::cout << "Department: " << department << std::endl;
+        std::cout << "Salary: $" << salary << std::endl;
+    }
+};
+
+// Function to demonstrate runtime polymorphism
+void displayPersonDetails(const Person& person) {
+    person.display();
+}
+
+int main() {
+    Student student("Alice", "Computer Science", 85, 2);
+    Employee employee("Bob", "Finance", 75000);
+
+    displayPersonDetails(student);
+    std::cout << std::endl;
+    displayPersonDetails(employee);
+
+    return 0;
+}
