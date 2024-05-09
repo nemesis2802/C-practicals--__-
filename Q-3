@@ -1,0 +1,33 @@
+#include <iostream>
+#include <map>
+#include <cctype> // For std::isalpha
+
+int main(int argc, char* argv[]) {
+    if (argc < 2) {
+        std::cout << "Usage: " << argv[0] << " <text>" << std::endl;
+        return 1;
+    }
+
+    // Initialize a map to store character frequencies
+    std::map<char, int> charCount;
+
+    // Iterate through each argument (excluding the program name)
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i];
+        for (char c : arg) {
+            if (std::isalpha(c)) {
+                // Convert to lowercase for case-insensitive counting
+                c = std::tolower(c);
+                charCount[c]++;
+            }
+        }
+    }
+
+    // Print the character frequencies
+    std::cout << "Character frequencies:" << std::endl;
+    for (const auto& entry : charCount) {
+        std::cout << entry.first << ": " << entry.second << std::endl;
+    }
+
+    return 0;
+}
