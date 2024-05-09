@@ -1,0 +1,125 @@
+#include <iostream>
+#include <vector>
+#include <stdexcept>
+
+class Matrix {
+private:
+    std::vector<std::vector<int>> mat;
+    int rows, cols;
+
+public:
+    Matrix(int r, int c) : rows(r), cols(c), mat(r, std::vector<int>(c)) {}
+
+    void inputMatrix() {
+        std::cout << "Enter matrix elements (row by row):\n";
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < cols; ++j) {
+                std::cin >> mat[i][j];
+            }
+        }
+    }
+
+    Matrix operator+(const Matrix& other) const {
+        if (rows != other.rows || cols != other.cols) {
+            throw std::invalid_argument("Matrices dimensions do not match for addition.");
+        }
+        Matrix result(rows, cols);
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < cols; ++j) {
+                result.mat[i][j] = mat[i][j] + other.mat[i][j];
+            }
+        }
+        return result;
+    }
+
+    Matrix operator*(const Matrix& other) const {
+        if (cols != other.rows) {
+            throw std::invalid_argument("Matrices dimensions do not match for multiplication.");
+        }
+        Matrix result(rows, other.cols);
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < other.cols; ++j) {
+                for (int k = 0; k < cols; ++k) {
+                    result.mat[i][j] += mat[i][k] * other.mat[k][j];
+                }
+            }
+        }
+        return result;
+    }
+
+    Matrix transpose() const {
+        Matrix result(cols, rows);
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < cols; ++j) {
+                result.mat[j][i] = mat[i][j];
+            }
+        }
+        return result;
+    }
+
+    void printMatrix() const {
+        for (const auto& row : mat) {
+            for (int val : row) {
+                std::cout << val << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
+};
+
+int main() {
+    try {
+        int rows, cols;
+        std::cout << "Enter the number of rows and columns for Matrix 1: ";
+        std::cin >> rows >> cols;
+        Matrix m1(rows, cols);
+        m1.inputMatrix();
+
+        std::cout << "Enter the number of rows and columns for Matrix 2: ";
+        std::cin >> rows >> cols;
+        Matrix m2(rows, cols);
+        m2.inputMatrix();
+
+        int choice;
+        std::cout << "Choose the operation:\n"
+                  << "1. Sum\n"
+                  << "2. Product\n"
+                  << "3. Transpose of Matrix 1\n"
+                  << "4. Transpose of Matrix 2\n"
+                  << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                Matrix sum = m1 + m2;
+                std::cout << "Sum of matrices:\n";
+                sum.printMatrix();
+                break;
+            }
+            case 2: {
+                Matrix product = m1 * m2;
+                std::cout << "Product of matrices:\n";
+                product.printMatrix();
+                break;
+            }
+            case 3: {
+                Matrix transposed = m1.transpose();
+                std::cout << "Transpose of Matrix 1:\n";
+                transposed.printMatrix();
+                break;
+            }
+            case 4: {
+                Matrix transposed = m2.transpose();
+                std::cout << "Transpose of Matrix 2:\n";
+                transposed.printMatrix();
+                break;
+            }
+            default:
+                std::cout << "Invalid choice.\n";
+        }
+    } catch (const std::invalid_argument& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
+
+    return 0;
+}
