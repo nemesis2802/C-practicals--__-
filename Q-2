@@ -1,0 +1,40 @@
+#include <iostream>
+#include <set>
+#include <vector>
+
+void removeDuplicates(int arr[], int& n) {
+    std::set<int> seen;
+    int index = 0;
+
+    for (int i = 0; i < n; ++i) {
+        // If the element is seen for the first time, add it to the set and the array
+        if (seen.find(arr[i]) == seen.end()) {
+            seen.insert(arr[i]);
+            arr[index++] = arr[i];
+        }
+    }
+
+    // Update the size of the array
+    n = index;
+}
+
+int main() {
+    int arr[] = {1, 2, 2, 3, 4, 4, 4, 5, 6, 6};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    std::cout << "Original array: ";
+    for (int i = 0; i < n; ++i) {
+        std::cout << arr[i] << " ";
+    }
+    std::cout << std::endl;
+
+    removeDuplicates(arr, n);
+
+    std::cout << "Array after removing duplicates: ";
+    for (int i = 0; i < n; ++i) {
+        std::cout << arr[i] << " ";
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
