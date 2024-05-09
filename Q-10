@@ -1,0 +1,66 @@
+#include <iostream>
+#include <stdexcept>
+#include <cmath>
+
+class Triangle {
+private:
+    double side_a, side_b, side_c;
+
+    // Private method to calculate the semi-perimeter
+    double semiPerimeter() const {
+        return (side_a + side_b + side_c) / 2;
+    }
+
+public:
+    // Constructor to initialize the sides of the triangle
+    Triangle(double a, double b, double c) {
+        if (a <= 0 || b <= 0 || c <= 0) {
+            throw std::invalid_argument("All sides must be greater than 0.");
+        }
+        if (a + b <= c || a + c <= b || b + c <= a) {
+            throw std::invalid_argument("Sum of any two sides must be greater than the third side.");
+        }
+        side_a = a;
+        side_b = b;
+        side_c = c;
+    }
+
+    // Overloaded function to calculate the area of a right-angled triangle
+    double area() const {
+        if (side_a == std::sqrt(side_b * side_b + side_c * side_c) ||
+            side_b == std::sqrt(side_a * side_a + side_c * side_c) ||
+            side_c == std::sqrt(side_a * side_a + side_b * side_b)) {
+            // One of the sides is the hypotenuse, calculate as right-angled triangle
+            double base, height;
+            if (side_a > side_b && side_a > side_c) {
+                base = side_b;
+                height = side_c;
+            } else if (side_b > side_a && side_b > side_c) {
+                base = side_a;
+                height = side_c;
+            } else {
+                base = side_a;
+                height = side_b;
+            }
+            return (base * height) / 2;
+        } else {
+            // Not a right-angled triangle, use Heron's formula
+            double s = semiPerimeter();
+            return std::sqrt(s * (s - side_a) * (s - side_b) * (s - side_c));
+        }
+    }
+};
+
+int main() {
+    try {
+        Triangle t1(3, 4, 5); // Right-angled triangle
+        std::cout << "Area of right-angled triangle: " << t1.area() << std::endl;
+
+        Triangle t2(3, 4, 6); // Scalene triangle
+        std::cout << "Area of scalene triangle using Heron's formula: " << t2.area() << std::endl;
+    } catch (const std::invalid_argument& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
+
+    return 0;
+}
